@@ -8,6 +8,6 @@ include_directories(${GTK4_INCLUDE_DIRS})
 link_directories(${GTK4_LIBRARY_DIRS})
 
 add_executable(IPAndRIP view/main.cpp
-        settings.cpp
+        data/settings.h
 )
 target_link_libraries(IPAndRIP ${GTK4_LIBRARIES})
