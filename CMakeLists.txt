@@ -11,7 +11,7 @@ link_directories(${GTK4_LIBRARY_DIRS})
 
 
 add_executable(IPAndRIP view/main.cpp
-        data/settings.h
+        view/gtk_page_route_config.h
 )
 target_link_libraries(IPAndRIP ${GTK4_LIBRARIES})
 target_link_libraries(IPAndRIP ${PCAP_LIB})
