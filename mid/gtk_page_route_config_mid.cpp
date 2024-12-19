@@ -2,9 +2,10 @@
 // Created by bochen on 2024/12/18.
 //
 
-#include "gtk_page_route_config_viewmodel.h"
+#include "gtk_page_route_config_mid.h"
 #include <gtk/gtk.h>
 #include <pcap.h>
+#include <string>
 #include <time.h>
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
@@ -14,14 +15,8 @@
 
 #define PCAP_FILE_PATH "../pingIP.pcap.pcapng"  // 替换为您的 PCAP 文件路径
 
-typedef struct {
-    GtkWidget *icmp_type1_list;
-    GtkWidget *icmp_type2_list;
-} AppWidgets;
-
+//处理pcap文件中的数据包
 void packet_handler(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
-    AppWidgets *widgets = (AppWidgets *) args;
-
     // 打印时间戳
     char time_string[64];
     strftime(time_string, sizeof(time_string), "%Y-%m-%d %H:%M:%S", localtime((const time_t *) &header->ts.tv_sec));
@@ -49,20 +44,17 @@ void packet_handler(u_char *args, const struct pcap_pkthdr *header, const u_char
                      icmp_header->icmp_code);
 
             // 根据 ICMP 类型将报文添加到不同的列表
-            GtkWidget *row = gtk_label_new(info);
             if (icmp_header->icmp_type == 8) {
                 // Echo Request
-                gtk_list_box_insert(GTK_LIST_BOX(widgets->icmp_type1_list), row, -1);
+                //放在容器里面返回
             } else if (icmp_header->icmp_type == 0) {
-                // Echo Reply
-                gtk_list_box_insert(GTK_LIST_BOX(widgets->icmp_type2_list), row, -1);
+                //放在容器里面返回
             }
-            gtk_widget_show(row);
         }
     }
 }
-
-void open_pcap_file(AppWidgets *widgets) {
+//配置pcap_file文件
+void open_pcap_file() {
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle;
 
@@ -72,51 +64,8 @@ void open_pcap_file(AppWidgets *widgets) {
         g_printerr("Could not open file %s: %s\n", PCAP_FILE_PATH, errbuf);
         return;
     }
-
     // 循环读取数据包
-    pcap_loop(handle, 0, packet_handler, (u_char *) widgets);
-
+    pcap_loop(handle, 0, packet_handler, (u_char *) NULL);
     // 关闭 PCAP 文件
     pcap_close(handle);
-}
-
-static void activate(GApplication *app, gpointer user_data) {
-    GtkWidget *window = gtk_application_window_new(GTK_APPLICATION(app));
-    gtk_window_set_title(GTK_WINDOW(window), "PCAP Packet Viewer");
-    gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
-
-    // 创建一个垂直盒子作为容器
-    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_window_set_child(GTK_WINDOW(window), box); // 将盒子设置为窗口的子组件
-
-    // 创建两个列表框
-    AppWidgets *widgets = g_new(AppWidgets, 1);
-    widgets->icmp_type1_list = gtk_list_box_new();
-    widgets->icmp_type2_list = gtk_list_box_new();
-
-    // 添加第一个列表框到盒子中
-    gtk_box_append(GTK_BOX(box), gtk_label_new("ICMP Type 8 (Echo Request):"));
-    gtk_box_append(GTK_BOX(box), widgets->icmp_type1_list);
-
-    // 添加分隔行
-    GtkWidget *separator = gtk_label_new("--------------------------------------------------");
-    gtk_box_append(GTK_BOX(box), separator);
-
-    // 添加第二个列表框到盒子中
-    gtk_box_append(GTK_BOX(box), gtk_label_new("ICMP Type 0 (Echo Reply):"));
-    gtk_box_append(GTK_BOX(box), widgets->icmp_type2_list);
-
-    // 打开 PCAP 文件并解析数据包
-    open_pcap_file(widgets);
-
-    // 显示窗口
-    gtk_widget_show(window); // 显示窗口及其所有组件
-}
-
-int main(int argc, char **argv) {
-    GtkApplication *app = gtk_application_new("com.example.pcapviewer", G_APPLICATION_FLAGS_NONE);
-    g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
-    int status = g_application_run(G_APPLICATION(app), argc, argv);
-    g_object_unref(app);
-    return status;
 }
