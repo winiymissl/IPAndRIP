@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(IPAndRIP)
 
 find_package(PkgConfig REQUIRED)
@@ -17,15 +19,15 @@ link_directories(${GTKMM_LIBRARY_DIRS})
 
 
 add_executable(IPAndRIP view/main.cpp
-        view/gtk_page_route_config.h
-        mid/gtk_page_route_config_mid.h
-        mid/gtk_page_route_config_mid.cpp
-        view/gtk_page_route_config.cpp
-        model/route_model.h
-        data/RoutingTableDataSource.cpp
-        data/RoutingTableDataSource.h
-        data/RoutingTableDataSource.h
+        view/main.cpp
+        view/MainWindow.cpp
+        view/MainWindow.h
+        view/PageRouteConfig.cpp
+        view/PageRouteConfig.h
+        view/PageRouteConfigAssistant.cpp
+        view/PageRouteConfigAssistant.h
 )
+
 target_link_libraries(IPAndRIP ${GTK4_LIBRARIES})
 target_link_libraries(IPAndRIP ${PCAP_LIB})
 target_link_libraries(IPAndRIP ${JSON_GLIB_LIBRARIES})
