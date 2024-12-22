@@ -8,7 +8,7 @@
 
 void PageRouteConfig::on_setup_label(
     const Glib::RefPtr<Gtk::ListItem> &list_item, Gtk::Align halign) {
-    list_item->set_child(*Gtk::make_managed<Gtk::Label>("hhhhhhhhhh", halign));
+    list_item->set_child(*Gtk::make_managed<Gtk::Label>("hh", halign));
 }
 
 void PageRouteConfig::on_bind_id(const Glib::RefPtr<Gtk::ListItem> &list_item) {
@@ -46,17 +46,17 @@ void PageRouteConfig::on_bind_subnet_mask(const Glib::RefPtr<Gtk::ListItem> &lis
     auto col = std::dynamic_pointer_cast<ModelColumns>(list_item->get_item());
     if (!col)
         return;
-    auto progressbar = dynamic_cast<Gtk::ProgressBar *>(list_item->get_child());
-    if (!progressbar)
+    auto label = dynamic_cast<Gtk::Label *>(list_item->get_child());
+    if (!label)
         return;
-    progressbar->set_text(col->subnet_mask);
+    label->set_text(col->subnet_mask);
 }
 
 void PageRouteConfig::on_bind_next_hop(const Glib::RefPtr<Gtk::ListItem> &list_item) {
     auto col = std::dynamic_pointer_cast<ModelColumns>(list_item->get_item());
     if (!col)
         return;
-    auto progressbar = dynamic_cast<Gtk::ProgressBar *>(list_item->get_child());
+    auto progressbar = dynamic_cast<Gtk::Label *>(list_item->get_child());
     if (!progressbar)
         return;
     progressbar->set_text(col->next_hop);
@@ -66,12 +66,13 @@ void PageRouteConfig::on_bind_outgoing_interface(const Glib::RefPtr<Gtk::ListIte
     auto col = std::dynamic_pointer_cast<ModelColumns>(list_item->get_item());
     if (!col)
         return;
-    auto progressbar = dynamic_cast<Gtk::ProgressBar *>(list_item->get_child());
+    auto progressbar = dynamic_cast<Gtk::Label *>(list_item->get_child());
     if (!progressbar)
         return;
     progressbar->set_text(col->outgoing_interface);
 }
-PageRouteConfig *& PageRouteConfig::getInstance() {
+
+PageRouteConfig *&PageRouteConfig::getInstance() {
     static PageRouteConfig *instance = new PageRouteConfig(); // 局部静态变量，线程安全
     return instance;
 }
@@ -80,13 +81,13 @@ using namespace std;
 
 Gtk::Box *build_page_route_config(Gtk::Box *box) {
     //这个page的主布局
-     PageRouteConfig *config = PageRouteConfig::getInstance();
-
+    PageRouteConfig *config = PageRouteConfig::getInstance();
 
     box->set_margin(5);
     box->append(config->m_ScrolledWindow);
     box->append(config->m_Button_Add);
     box->append(config->m_Button_Remove);
+    config->m_ScrolledWindow.set_expand(true);
 
     config->m_ScrolledWindow.set_child(config->m_ColumnView);
     config->m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
@@ -105,6 +106,7 @@ Gtk::Box *build_page_route_config(Gtk::Box *box) {
     auto selection_model = Gtk::SingleSelection::create(config->m_ListStore);
     selection_model->set_autoselect(false);
     selection_model->set_can_unselect(true);
+
     config->m_ColumnView.set_model(selection_model);
     config->m_ColumnView.add_css_class("data-table"); // high density table
 
@@ -174,7 +176,6 @@ Gtk::Box *build_page_route_config(Gtk::Box *box) {
     column = Gtk::ColumnViewColumn::create("destination network", factory);
     config->m_ColumnView.append_column(column);
 
-
     config->m_Button_Add.set_hexpand(true);
     config->m_Button_Add.set_margin(5);
     config->m_Button_Add.set_label("Add");
@@ -192,14 +193,14 @@ Gtk::Box *build_page_route_config(Gtk::Box *box) {
     return box;
 }
 
-
 void PageRouteConfig::on_assistant_apply() {
-    // Glib::ustring entry_type, destination_network, subnet_mask, next_hop, outgoing_interface;
-    // config->m_assistant.get_result(entry_type, destination_network, subnet_mask, next_hop, outgoing_interface);
+    //如何回调数据到我的界面上
+    Glib::ustring entry_type, destination_network, subnet_mask, next_hop, outgoing_interface;
+    m_assistant.get_result(entry_type, destination_network, subnet_mask, next_hop, outgoing_interface);
     // //添加新条目
-    // config->m_ListStore->append(
-    //     PageRouteConfig::ModelColumns::create("1", entry_type, destination_network, subnet_mask, next_hop,
-    //                                           outgoing_interface));
+    m_ListStore->append(
+        PageRouteConfig::ModelColumns::create("1", entry_type, destination_network, subnet_mask, next_hop,
+                                              outgoing_interface));
 }
 
 void PageRouteConfig::on_button_clicked_add() {
@@ -212,4 +213,3 @@ void PageRouteConfig::on_button_clicked_remove() {
     // auto list = m_ColumnView.get_columns();
     m_ListStore->remove(0);
 }
-

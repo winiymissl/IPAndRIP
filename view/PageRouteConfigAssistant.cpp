@@ -141,6 +141,11 @@ void PageRouteConfigAssistant::get_result(
     subnet_mask = m_entry3.get_text();
     next_hop = m_entry4.get_text();
     outgoing_interface = m_entry5.get_text();
+    m_entry1.set_text("");
+    m_entry2.set_text("");
+    m_entry3.set_text("");
+    m_entry4.set_text("");
+    m_entry5.set_text("");
 }
 
 void PageRouteConfigAssistant::on_assistant_cancel() {

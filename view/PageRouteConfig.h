@@ -19,7 +19,6 @@ public:
 
     ~PageRouteConfig() = default;
 
-
     // Signal handlers:
     void on_button_clicked_add();
 
