@@ -197,7 +197,7 @@ void PageRouteConfig::on_assistant_apply() {
     //如何回调数据到我的界面上
     Glib::ustring entry_type, destination_network, subnet_mask, next_hop, outgoing_interface;
     m_assistant.get_result(entry_type, destination_network, subnet_mask, next_hop, outgoing_interface);
-    // //添加新条目
+    //添加新条目
     m_ListStore->append(
         PageRouteConfig::ModelColumns::create("1", entry_type, destination_network, subnet_mask, next_hop,
                                               outgoing_interface));
