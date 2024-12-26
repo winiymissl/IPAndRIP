@@ -228,6 +228,9 @@ JSON_GLIB:FILEPATH=JSON_GLIB-NOTFOUND
 //Path to a library.
 PCAP_LIB:FILEPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk/usr/lib/libpcap.tbd
 
+//Path to a library.
+PCAP_LIBRARY:FILEPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk/usr/lib/libpcap.tbd
+
 //Arguments to supply to pkg-config
 PKG_CONFIG_ARGN:STRING=
 

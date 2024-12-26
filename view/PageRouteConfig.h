@@ -12,10 +12,11 @@
 Gtk::Box *build_page_route_config(Gtk::Box *);
 
 class PageRouteConfig {
-public:
-    static PageRouteConfig * &getInstance();
-
     PageRouteConfig() = default;
+
+public:
+    static PageRouteConfig * getInstance();
+
 
     ~PageRouteConfig() = default;
 

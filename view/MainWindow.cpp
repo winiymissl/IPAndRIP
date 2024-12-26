@@ -3,6 +3,8 @@
 //
 
 #include "MainWindow.h"
+
+#include "PagePcapRead.h"
 #include "PageRouteConfig.h"
 #include "PageRouteConfigAssistant.h"
 
@@ -24,15 +26,13 @@ MainWindow::MainWindow() {
     set_default_size(400, 300);
 
     stack = Gtk::make_managed<Gtk::Stack>();
-
+    //配置路由表界面
     auto page1 = build_page_route_config(Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL));
     page1->set_margin(10);
-
-    auto page2 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    //选择pcap文件的界面
+    auto page2 = build_page_read_pcap(Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL));
     page2->set_margin(10);
-    auto label2 = Gtk::make_managed<Gtk::Label>("Page 2");
-    page2->append(*label2);
-
+    //显示转发的报文
     auto page3 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     page3->set_margin(10);
     auto label3 = Gtk::make_managed<Gtk::Label>("Page 3");

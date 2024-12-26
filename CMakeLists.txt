@@ -5,7 +5,7 @@ project(IPAndRIP)
 
 find_package(PkgConfig REQUIRED)
 find_library(PCAP_LIB pcap PATHS /usr/local/opt/libpcap)
-find_package(PkgConfig REQUIRED)
+
 pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
 pkg_check_modules(JSON_GLIB REQUIRED json-glib-1.0)
 pkg_check_modules(GTK4 REQUIRED gtk4)
@@ -26,6 +26,15 @@ add_executable(IPAndRIP view/main.cpp
         view/PageRouteConfig.h
         view/PageRouteConfigAssistant.cpp
         view/PageRouteConfigAssistant.h
+        view/PagePcapRead.cpp
+        view/PagePcapRead.h
+        view/PageCore.cpp
+        view/PageCore.h
+        tool/Intent.cpp
+        tool/Intent.h
+        mid/gtk_page_pcap_read.cpp
+        mid/gtk_page_pcap_read.h
+        mid/gtk_page_pcap_read.h
 )
 
 target_link_libraries(IPAndRIP ${GTK4_LIBRARIES})

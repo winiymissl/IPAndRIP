@@ -72,7 +72,7 @@ void PageRouteConfig::on_bind_outgoing_interface(const Glib::RefPtr<Gtk::ListIte
     progressbar->set_text(col->outgoing_interface);
 }
 
-PageRouteConfig *&PageRouteConfig::getInstance() {
+PageRouteConfig *PageRouteConfig::getInstance() {
     static PageRouteConfig *instance = new PageRouteConfig(); // 局部静态变量，线程安全
     return instance;
 }
